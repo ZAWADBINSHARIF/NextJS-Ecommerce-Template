@@ -90,14 +90,11 @@ const Hero = () => {
                 </div>
               </div>
 
-              
+
             </div>
           </div>
         </div>
       </div>
-
-      {/* <!-- Hero features --> */}
-      <HeroFeature />
     </section>
   );
 };
