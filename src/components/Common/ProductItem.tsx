@@ -74,7 +74,7 @@ const ProductItem = ({ item }: { item: Product; }) => {
 
 
       <div className="mt-4 flex justify-between">
-        <button
+        {/* <button
           onClick={() => {
             openModal();
             handleQuickViewUpdate();
@@ -82,7 +82,7 @@ const ProductItem = ({ item }: { item: Product; }) => {
           className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] bg-blue text-white ease-out duration-200 hover:bg-blue-dark"
         >
           Quick View
-        </button>
+        </button> */}
 
         <button
           onClick={() => {
@@ -91,7 +91,7 @@ const ProductItem = ({ item }: { item: Product; }) => {
           }}
           className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] border border-blue text-blue ease-out duration-200 hover:bg-blue hover:text-white"
         >
-          Full View
+          View Details
         </button>
 
       </div>
