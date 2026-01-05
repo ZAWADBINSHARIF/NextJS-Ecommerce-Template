@@ -1,5 +1,5 @@
 import React from "react";
-import ShopDetails from "@/components/ShopDetails";
+import ShopDetails from "@/components/ProductDetails";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
