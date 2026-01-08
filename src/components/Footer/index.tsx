@@ -304,7 +304,7 @@ const Footer = () => {
             </p>
 
             <div className="flex items-center gap-6">
-              <span className="text-gray-600 text-sm">We Accept:</span>
+              <span className="text-gray-600 text-sm">We Accept: External Stripe Payment Getway</span>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-5 bg-gray-400 rounded"></div>
                 <div className="w-8 h-5 bg-gray-400 rounded"></div>
