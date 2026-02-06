@@ -19,12 +19,12 @@ export const menuData: Menu[] = [
     newTab: false,
     path: "/all-categories",
   },
-  {
-    id: 4,
-    title: "Contact",
-    newTab: false,
-    path: "/contact"
-  }
+  // {
+  //   id: 4,
+  //   title: "Contact",
+  //   newTab: false,
+  //   path: "/contact"
+  // }
 ];
 
 

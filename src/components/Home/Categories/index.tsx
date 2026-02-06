@@ -8,9 +8,21 @@ import Image from "next/image";
 import "swiper/css/navigation";
 import "swiper/css";
 import SingleItem from "./SingleItem";
+import { useQuery } from "@tanstack/react-query";
+import QueryKeys from "@/constant/QueryKeys";
+import { fetchAllCategories } from "@/api";
 
 const Categories = () => {
   const sliderRef = useRef(null);
+
+  const allCategoryQuery = useQuery({
+    'queryKey': [QueryKeys.STORE_CATEGORIES],
+    'queryFn': fetchAllCategories,
+  });
+
+  if (allCategoryQuery.error) {
+    console.log(allCategoryQuery.error);
+  }
 
   const handlePrev = useCallback(() => {
     if (!sliderRef.current) return;
@@ -134,7 +146,7 @@ const Categories = () => {
               },
             }}
           >
-            {data.map((item, key) => (
+            {allCategoryQuery.data?.data?.categories && allCategoryQuery.data?.data?.categories.map((item, key) => (
               <SwiperSlide key={key}>
                 <SingleItem item={item} />
               </SwiperSlide>

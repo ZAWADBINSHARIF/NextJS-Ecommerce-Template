@@ -16,12 +16,21 @@ import PreviewSliderModal from "@/components/Common/PreviewSlider";
 import ScrollToTop from "@/components/Common/ScrollToTop";
 import PreLoader from "@/components/Common/PreLoader";
 
+import axios from "axios";
+
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [loading, setLoading] = useState<boolean>(true);
+
+  const queryClient = new QueryClient();
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
@@ -38,18 +47,24 @@ export default function RootLayout({
               <CartModalProvider>
                 <ModalProvider>
                   <PreviewSliderProvider>
-                    <Header />
-                    {children}
+                    <QueryClientProvider client={queryClient}>
 
-                    <QuickViewModal />
-                    {/* <CartSidebarModal />
+                      <Header />
+                      {children}
+
+                      <QuickViewModal />
+
+                      {/* <CartSidebarModal />
                     <PreviewSliderModal /> */}
+
+                      <Footer />
+
+                    </QueryClientProvider>
                   </PreviewSliderProvider>
                 </ModalProvider>
               </CartModalProvider>
             </ReduxProvider>
             <ScrollToTop />
-            <Footer />
           </>
         )}
       </body>

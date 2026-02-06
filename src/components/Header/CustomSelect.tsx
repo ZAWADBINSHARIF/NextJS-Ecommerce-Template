@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { Category } from "@/types/category";
+import React, { useState, useEffect, useCallback } from "react";
 
-const CustomSelect = ({ options }) => {
+const CustomSelect = ({ options }: { options: Category[]; }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(options[0]);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const FirstCategoryOption = {
+    id: 0,
+    name: 'All Categories',
+    image: null
   };
+
+  const [selectedOption, setSelectedOption] = useState<Category>(FirstCategoryOption);
+
+  const toggleDropdown = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
@@ -28,28 +36,34 @@ const CustomSelect = ({ options }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isOpen, toggleDropdown]);
 
   return (
     <div className="dropdown-content custom-select relative" style={{ width: "200px" }}>
       <div
-        className={`select-selected whitespace-nowrap ${
-          isOpen ? "select-arrow-active" : ""
-        }`}
+        className={`select-selected whitespace-nowrap ${isOpen ? "select-arrow-active" : ""
+          }`}
         onClick={toggleDropdown}
       >
-        {selectedOption.label}
+        {selectedOption.name}
       </div>
       <div className={`select-items ${isOpen ? "" : "select-hide"}`}>
-        {options.slice(1, -1).map((option, index) => (
+        <div
+          key={FirstCategoryOption.id}
+          onClick={() => handleOptionClick(FirstCategoryOption)}
+          className={`select-item ${selectedOption === FirstCategoryOption ? "same-as-selected" : ""
+            }`}
+        >
+          {FirstCategoryOption.name}
+        </div>
+        {options.map((option, index) => (
           <div
             key={index}
             onClick={() => handleOptionClick(option)}
-            className={`select-item ${
-              selectedOption === option ? "same-as-selected" : ""
-            }`}
+            className={`select-item ${selectedOption === option ? "same-as-selected" : ""
+              }`}
           >
-            {option.label}
+            {option.name}
           </div>
         ))}
       </div>

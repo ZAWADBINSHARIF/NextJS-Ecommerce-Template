@@ -1,10 +1,22 @@
+'use client'
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductItem from "@/components/Common/ProductItem";
 import shopData from "@/components/Shop/shopData";
+import { useQuery } from "@tanstack/react-query";
+import QueryKeys from "@/constant/QueryKeys";
+import { fetchLatestProducts } from "@/api";
 
 const NewArrival = () => {
+
+  const latestProductsQuery = useQuery({
+    'queryKey': [QueryKeys.STORE_LATEST_PRODUCTS],
+    'queryFn': fetchLatestProducts
+  });
+
+
   return (
     <section className="overflow-hidden pt-15">
       <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -31,7 +43,7 @@ const NewArrival = () => {
                   strokeLinecap="round"
                 />
               </svg>
-              This Week’s
+              These are new product
             </span>
             <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
               New Arrivals
@@ -48,7 +60,7 @@ const NewArrival = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-7.5 gap-y-9">
           {/* <!-- New Arrivals item --> */}
-          {shopData.map((item, key) => (
+          {latestProductsQuery?.data?.data?.products && latestProductsQuery?.data?.data?.products.map((item, key) => (
             <ProductItem item={item} key={key} />
           ))}
         </div>

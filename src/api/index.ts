@@ -1,0 +1,37 @@
+import api from "@/lib/axios";
+
+export const fetchAllAvailableProducts = async () => {
+    const products = await api.get('/products');
+
+    return products;
+};
+
+export const fetchAllCategories = async () => {
+    const categories = await api.get('/categories');
+
+    return categories;
+};
+
+export const fetchLatestProducts = async () => {
+    const products = await api.get('/latest-products');
+
+    return products;
+};
+
+export const fetchContacts = async () => {
+    const contacts = await api.get('/store-contacts');
+
+    return contacts;
+};
+
+export const fetchStoreProfile = async () => {
+    const profile = await api.get('/store-profile');
+
+    return profile;
+};
+
+export const fetchQuickLinks = async () => {
+    const links = await api.get('/store-quick-links');
+
+    return links;
+};

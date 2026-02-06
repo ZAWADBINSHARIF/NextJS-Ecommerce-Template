@@ -11,6 +11,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { updateproductDetails } from "@/redux/features/product-details";
 import { useRouter } from "next/navigation";
+import { STORAGE_URL } from "@/constant";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 const SingleGridItem = ({ item }: { item: Product; }) => {
   const { openModal } = useModalContext();
@@ -18,33 +20,8 @@ const SingleGridItem = ({ item }: { item: Product; }) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  // update the QuickView state
-  const handleQuickViewUpdate = () => {
-    dispatch(updateQuickView({ ...item }));
-  };
-
   const handleProductDetails = () => {
     dispatch(updateproductDetails({ ...item }));
-  };
-
-  // add to cart
-  const handleAddToCart = () => {
-    dispatch(
-      addItemToCart({
-        ...item,
-        quantity: 1,
-      })
-    );
-  };
-
-  const handleItemToWishList = () => {
-    dispatch(
-      addItemToWishlist({
-        ...item,
-        status: "available",
-        quantity: 1,
-      })
-    );
   };
 
   return (
@@ -56,16 +33,18 @@ const SingleGridItem = ({ item }: { item: Product; }) => {
           handleProductDetails();
         }}
         className="relative overflow-hidden flex items-center justify-center rounded-lg bg-white shadow-1 min-h-[270px] mb-4">
-        <Image src={item.imgs.previews[0]} alt="" width={250} height={250} />
+        <Image src={STORAGE_URL + item.images[0]} alt="" width={250} height={250} unoptimized />
       </div>
 
       <h3 className="font-medium text-dark ease-out duration-200 group-hover:text-blue mb-1.5">
-        <Link href="/shop-details"> {item.title} </Link>
+        <Link href="/shop-details"> {item.name} </Link>
       </h3>
 
       <span className="flex items-center gap-2 font-medium text-lg">
-        <span className="text-dark">${item.discountedPrice}</span>
-        <span className="text-dark-4 line-through">${item.price}</span>
+        <span className="text-dark">${formatCurrency(item.price)}</span>
+        {item.discount_percentage > 0 &&
+          <span className="text-dark-4 line-through">${item.price + item.discount_percentage / 100 * item.price}</span>
+        }
       </span>
 
       <div className="mt-4 flex justify-between">

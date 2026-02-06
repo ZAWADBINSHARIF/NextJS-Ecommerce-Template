@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 };
 
 const ShopWithSidebarPage = () => {
+
   return (
     <main>
       <ShopWithSidebar />
