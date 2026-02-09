@@ -72,7 +72,7 @@ const ShopWithSidebar = () => {
     <>
       <Breadcrumb
         title={"Explore All Products"}
-        pages={["shop", "/", "shop with sidebar"]}
+        pages={["shop", "/", "shop product"]}
       />
       <section className="overflow-hidden relative pb-20 pt-5 lg:pt-20 xl:pt-28 bg-[#f3f4f6]">
         <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
@@ -154,11 +154,6 @@ const ShopWithSidebar = () => {
                   {/* <!-- top bar left --> */}
                   <div className="flex flex-wrap items-center gap-4">
                     <CustomSelect options={options} />
-
-                    <p>
-                      Showing <span className="text-dark">9 of 50</span>{" "}
-                      Products
-                    </p>
                   </div>
 
                   {/* <!-- top bar right --> */}
@@ -261,7 +256,7 @@ const ShopWithSidebar = () => {
               {/* <!-- Products Grid Tab Content End --> */}
 
               {/* <!-- Products Pagination Start --> */}
-              <div className="flex justify-center mt-15">
+              {/* <div className="flex justify-center mt-15">
                 <div className="bg-white shadow-1 rounded-md p-2">
                   <ul className="flex items-center">
                     <li>
@@ -375,7 +370,7 @@ const ShopWithSidebar = () => {
                     </li>
                   </ul>
                 </div>
-              </div>
+              </div> */}
               {/* <!-- Products Pagination End --> */}
             </div>
             {/* // <!-- Content End --> */}

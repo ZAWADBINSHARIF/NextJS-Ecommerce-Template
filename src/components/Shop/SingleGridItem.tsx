@@ -20,6 +20,8 @@ const SingleGridItem = ({ item }: { item: Product; }) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
+  const routePath = `/shop-details/${item.short_id}/${item.slug}`;
+
   const handleProductDetails = () => {
     dispatch(updateproductDetails({ ...item }));
   };
@@ -29,7 +31,7 @@ const SingleGridItem = ({ item }: { item: Product; }) => {
       className="group cursor-pointer">
       <div
         onClick={() => {
-          router.push('/shop-details');
+          router.push(routePath);
           handleProductDetails();
         }}
         className="relative overflow-hidden flex items-center justify-center rounded-lg bg-white shadow-1 min-h-[270px] mb-4">
@@ -43,24 +45,15 @@ const SingleGridItem = ({ item }: { item: Product; }) => {
       <span className="flex items-center gap-2 font-medium text-lg">
         <span className="text-dark">${formatCurrency(item.price)}</span>
         {item.discount_percentage > 0 &&
-          <span className="text-dark-4 line-through">${item.price + item.discount_percentage / 100 * item.price}</span>
+          <span className="text-dark-4 line-through">${formatCurrency(+item.price + item.discount_percentage / 100 * +item.price)}</span>
         }
       </span>
 
       <div className="mt-4 flex justify-between">
-        {/* <button
-          onClick={() => {
-            openModal();
-            handleQuickViewUpdate();
-          }}
-          className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] bg-blue text-white ease-out duration-200 hover:bg-blue-dark"
-        >
-          Quick View
-        </button> */}
 
         <button
           onClick={() => {
-            router.push('/shop-details');
+            router.push(routePath);
             handleProductDetails();
           }}
           className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] border border-blue text-blue ease-out duration-200 hover:bg-blue hover:text-white"

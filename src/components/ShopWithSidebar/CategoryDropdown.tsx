@@ -12,28 +12,6 @@ const CategoryItem = ({ category }) => {
       onClick={() => setSelected(!selected)}
     >
       <div className="flex items-center gap-2">
-        <div
-          className={`cursor-pointer flex items-center justify-center rounded w-4 h-4 border ${
-            selected ? "border-blue bg-blue" : "bg-white border-gray-3"
-          }`}
-        >
-          <svg
-            className={selected ? "block" : "hidden"}
-            width="10"
-            height="10"
-            viewBox="0 0 10 10"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M8.33317 2.5L3.74984 7.08333L1.6665 5"
-              stroke="white"
-              strokeWidth="1.94437"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
 
         <span>{category.name}</span>
       </div>

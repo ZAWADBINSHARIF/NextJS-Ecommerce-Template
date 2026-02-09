@@ -199,3 +199,5 @@ input[type='search']::-webkit-search-results-decoration {
 .range-slider__range {
   @apply !bg-blue;
 }
+
+@plugin "@tailwindcss/typography";

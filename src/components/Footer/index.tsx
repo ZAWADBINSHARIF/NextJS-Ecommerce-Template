@@ -4,9 +4,10 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { fetchContacts } from "@/api";
+import { fetchContacts, fetchQuickLinks } from "@/api";
 import QueryKeys from "@/constant/QueryKeys";
 import { IoLogoYoutube } from "react-icons/io";
+import { API_URL } from "@/constant";
 
 
 const Footer = () => {
@@ -15,6 +16,11 @@ const Footer = () => {
   const contactsQuery = useQuery({
     'queryFn': fetchContacts,
     'queryKey': [QueryKeys.STORE_CONTACT]
+  });
+
+  const quickLinksQuery = useQuery({
+    'queryFn': fetchQuickLinks,
+    'queryKey': [QueryKeys.STORE_QUICK_LINKS]
   });
 
   console.log(contactsQuery?.data?.data?.contacts);
@@ -207,7 +213,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="/shop-with-sidebar">
+                <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="/shop-product">
                   Shop
                 </Link>
               </li>
@@ -225,128 +231,19 @@ const Footer = () => {
               Quick Link
             </h2>
 
-            <ul className="grid grid-flow-col grid-rows-5 gap-x-15 gap-y-2">
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Terms of Use
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Contact
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Help Center
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Links
-                </a>
-              </li>
-            </ul>
+            {quickLinksQuery.data?.data?.links &&
+              <ul className="grid grid-flow-col grid-rows-5 gap-x-15 gap-y-2">
+                {quickLinksQuery.data?.data?.links?.map((item, key) => (
+                  <li key={item.id}>
+                    <Link href={'/quick-link/' + item.url_slug}>
+                      <p className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" >
+                        {item.title}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            }
           </div>
 
           {/* <!-- Quick Link Section 2 --> */}
@@ -407,9 +304,9 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>;
       {/* <!-- footer bottom end --> */}
-    </footer>
+    </footer >
   );
 };
 

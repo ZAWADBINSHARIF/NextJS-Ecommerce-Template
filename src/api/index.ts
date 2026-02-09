@@ -35,3 +35,31 @@ export const fetchQuickLinks = async () => {
 
     return links;
 };
+
+export const fetchQuickLinkContent = async ({ url_slug }: { url_slug: string; }) => {
+    const { data } = await api.get('/store-quick-link-content', {
+        'params': { url_slug },
+    });
+
+    return data;
+};
+
+export const fetchProductDetails = async ({
+    short_id,
+    slug,
+}: {
+    short_id: string;
+    slug: string;
+}) => {
+    const { data } = await api.get(
+        `/product-details/${short_id}/${slug}`
+    );
+
+    return data;
+};
+
+export const fetchBanners = async () => {
+    const { data } = await api.get('/store-banners');
+
+    return data;
+};

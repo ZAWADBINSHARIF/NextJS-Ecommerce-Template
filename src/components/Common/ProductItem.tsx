@@ -17,6 +17,8 @@ const ProductItem = ({ item }: { item: Product; }) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
+  const routePath = `/shop-details/${item.short_id}/${item.slug}`;
+
   const handleProductDetails = () => {
     dispatch(updateproductDetails({ ...item }));
   };
@@ -27,7 +29,7 @@ const ProductItem = ({ item }: { item: Product; }) => {
     >
       <div
         onClick={() => {
-          router.push('/shop-details');
+          router.push(routePath);
           handleProductDetails();
         }}
         className="relative overflow-hidden flex items-center justify-center rounded-lg bg-[#F6F7FB] min-h-[270px] mb-4">
@@ -38,7 +40,7 @@ const ProductItem = ({ item }: { item: Product; }) => {
         className="font-medium text-dark ease-out duration-200 group-hover:text-blue mb-1.5"
         onClick={() => handleProductDetails()}
       >
-        <Link href="/shop-details"> {item.name} </Link>
+        <Link href={routePath}> {item.name} </Link>
       </h3>
 
       <span className="flex items-center gap-2 font-medium text-lg">
@@ -50,7 +52,7 @@ const ProductItem = ({ item }: { item: Product; }) => {
       <div className="mt-4 flex justify-between">
         <button
           onClick={() => {
-            router.push('/shop-details');
+            router.push(routePath);
             handleProductDetails();
           }}
           className="inline-flex font-medium text-custom-sm py-[7px] px-5 rounded-[5px] border border-blue text-blue ease-out duration-200 hover:bg-blue hover:text-white"

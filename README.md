@@ -154,7 +154,7 @@ The template includes the following pages:
 - `/contact` - Contact form and information
 - `/error` - Error page
 - `/shop-details` - Individual product detail page
-- `/shop-with-sidebar` - Shop page with sidebar filters
+- `/shop-product` - Shop page with sidebar filters
 - `/shop-without-sidebar` - Shop page without sidebar
 
 ## 📚 Documentation

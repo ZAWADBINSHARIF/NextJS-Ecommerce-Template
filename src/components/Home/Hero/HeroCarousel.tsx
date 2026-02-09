@@ -1,111 +1,90 @@
 "use client";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
-
-// Import Swiper styles
-import "swiper/css/pagination";
 import "swiper/css";
+import "swiper/css/pagination";
 
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import { fetchBanners } from "@/api";
+import QueryKeys from "@/constant/QueryKeys";
+import { STORAGE_URL } from "@/constant";
 
 const HeroCarousal = () => {
+  const bannerQuery = useQuery({
+    queryFn: fetchBanners,
+    queryKey: [QueryKeys.STORE_BANNERS],
+  });
+
+  if (bannerQuery.error) return null;
+
   return (
-    <Swiper
-      spaceBetween={30}
-      centeredSlides={true}
-      autoplay={{
-        delay: 2500,
-        disableOnInteraction: false,
-      }}
-      pagination={{
-        clickable: true,
-      }}
-      modules={[Autoplay, Pagination]}
-      className="hero-carousel"
-    >
-      <SwiperSlide>
-        <div className="flex items-center pt-6 sm:pt-0 flex-col-reverse sm:flex-row">
-          <div className="max-w-[394px] py-10 sm:py-15 lg:py-24.5 pl-4 sm:pl-7.5 lg:pl-12.5">
-            <div className="flex items-center gap-4 mb-7.5 sm:mb-10">
-              <span className="block font-semibold text-heading-3 sm:text-heading-1 text-blue">
-                30%
-              </span>
-              <span className="block text-dark text-sm sm:text-custom-1 sm:leading-[24px]">
-                Sale
-                <br />
-                Off
-              </span>
+    <section className="w-full bg-white">
+      <Swiper
+        spaceBetween={60}
+        centeredSlides
+        autoplay={{ delay: 3500, disableOnInteraction: false }}
+        pagination={{ clickable: true }}
+        modules={[Autoplay, Pagination]}
+        className="max-w-7xl mx-auto"
+      >
+        {bannerQuery.data?.banners?.map((item) => (
+          <SwiperSlide key={item.id}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[560px]">
+
+              {/* LEFT — TEXT */}
+              <div className="lg:col-span-7 flex flex-col pt-20 lg:pt-0 justify-center px-6 lg:px-12">
+                {item.discount_percentage > 0 && (
+                  <span className="mb-6 inline-block text-2xl font-bold tracking-widest uppercase text-blue">
+                    Save {item.discount_percentage}%
+                  </span>
+                )}
+
+                <h1 className="text-4xl sm:text-6xl font-extrabold leading-tight text-gray-7 max-w-2xl">
+                  {item.title}
+                </h1>
+
+                {item.sub_title && (
+                  <p className="mt-6 text-lg text-gray-600 max-w-xl">
+                    {item.sub_title}
+                  </p>
+                )}
+
+                {item.show_button && item.button_name && (
+                  <div className="mt-10">
+                    <a
+                      href={item.link}
+                      className="inline-flex items-center gap-3 bg-blue text-white px-10 py-4 text-sm font-semibold rounded-lg shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all"
+                    >
+                      {item.button_name}
+                      <span className="text-lg">→</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* RIGHT — IMAGE */}
+              <div className="lg:col-span-5 relative flex items-center justify-center bg-gray-50">
+                <Image
+                  src={STORAGE_URL + item.image}
+                  alt={item.title}
+                  width={520}
+                  height={520}
+                  priority
+                  className="object-contain"
+                  unoptimized
+                />
+
+                {/* subtle accent line */}
+                {/* <span className="absolute left-0 top-0 h-full w-1 bg-gray-5" /> */}
+              </div>
+
             </div>
-
-            <h1 className="font-semibold text-dark text-xl sm:text-3xl mb-3">
-              <a href="#">True Wireless Noise Cancelling Headphone</a>
-            </h1>
-
-            <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at ipsum at risus euismod lobortis in
-            </p>
-
-            <a
-              href="#"
-              className="inline-flex font-medium text-white text-custom-sm rounded-md bg-dark py-3 px-9 ease-out duration-200 hover:bg-blue mt-10"
-            >
-              Shop Now
-            </a>
-          </div>
-
-          <div>
-            <Image
-              src="/images/hero/hero-01.png"
-              alt="headphone"
-              width={351}
-              height={358}
-            />
-          </div>
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        {" "}
-        <div className="flex items-center pt-6 sm:pt-0 flex-col-reverse sm:flex-row">
-          <div className="max-w-[394px] py-10 sm:py-15 lg:py-26 pl-4 sm:pl-7.5 lg:pl-12.5">
-            <div className="flex items-center gap-4 mb-7.5 sm:mb-10">
-              <span className="block font-semibold text-heading-3 sm:text-heading-1 text-blue">
-                30%
-              </span>
-              <span className="block text-dark text-sm sm:text-custom-1 sm:leading-[24px]">
-                Sale
-                <br />
-                Off
-              </span>
-            </div>
-
-            <h1 className="font-semibold text-dark text-xl sm:text-3xl mb-3">
-              <a href="#">True Wireless Noise Cancelling Headphone</a>
-            </h1>
-
-            <p>
-              Lorem ipsum dolor sit, consectetur elit nunc suscipit non ipsum
-              nec suscipit.
-            </p>
-
-            <a
-              href="#"
-              className="inline-flex font-medium text-white text-custom-sm rounded-md bg-dark py-3 px-9 ease-out duration-200 hover:bg-blue mt-10"
-            >
-              Shop Now
-            </a>
-          </div>
-
-          <div>
-            <Image
-              src="/images/hero/hero-01.png"
-              alt="headphone"
-              width={351}
-              height={358}
-            />
-          </div>
-        </div>
-      </SwiperSlide>
-    </Swiper>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </section>
   );
 };
 
