@@ -1,15 +1,17 @@
 "use client";
 
+import { Category } from "@/types/category";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-const CategoryItem = ({ category }) => {
-  const [selected, setSelected] = useState(false);
+const CategoryItem = ({ category, isSelected }: { category: Category, isSelected: boolean; }) => {
+
   return (
-    <button
-      className={`${
-        selected && "text-blue"
-      } group flex items-center justify-between ease-out duration-200 hover:text-blue `}
-      onClick={() => setSelected(!selected)}
+    <Link
+      href={'/shop-product?category=' + category.slug}
+      className={`${isSelected && "text-blue"
+        } group flex items-center justify-between ease-out duration-200 hover:text-blue `}
     >
       <div className="flex items-center gap-2">
 
@@ -17,18 +19,20 @@ const CategoryItem = ({ category }) => {
       </div>
 
       <span
-        className={`${
-          selected ? "text-white bg-blue" : "bg-gray-2"
-        } inline-flex rounded-[30px] text-custom-xs px-2 ease-out duration-200 group-hover:text-white group-hover:bg-blue`}
+        className={`${isSelected ? "text-white bg-blue" : "bg-gray-2"
+          } inline-flex rounded-[30px] text-custom-xs px-2 ease-out duration-200 group-hover:text-white group-hover:bg-blue`}
       >
         {category.available_store_products_count}
       </span>
-    </button>
+    </Link>
   );
 };
 
 const CategoryDropdown = ({ categories }) => {
   const [toggleDropdown, setToggleDropdown] = useState(true);
+
+  const searchParams = useSearchParams();
+  const category_slug = searchParams.get('category');
 
   return (
     <div className="bg-white shadow-1 rounded-lg">
@@ -37,16 +41,14 @@ const CategoryDropdown = ({ categories }) => {
           e.preventDefault();
           setToggleDropdown(!toggleDropdown);
         }}
-        className={`cursor-pointer flex items-center justify-between py-3 pl-6 pr-5.5 ${
-          toggleDropdown && "shadow-filter"
-        }`}
+        className={`cursor-pointer flex items-center justify-between py-3 pl-6 pr-5.5 ${toggleDropdown && "shadow-filter"
+          }`}
       >
         <p className="text-dark">Category</p>
         <button
           aria-label="button for category dropdown"
-          className={`text-dark ease-out duration-200 ${
-            toggleDropdown && "rotate-180"
-          }`}
+          className={`text-dark ease-out duration-200 ${toggleDropdown && "rotate-180"
+            }`}
         >
           <svg
             className="fill-current"
@@ -69,12 +71,11 @@ const CategoryDropdown = ({ categories }) => {
       {/* dropdown && 'shadow-filter */}
       {/* <!-- dropdown menu --> */}
       <div
-        className={`flex-col gap-3 py-6 pl-6 pr-5.5 ${
-          toggleDropdown ? "flex" : "hidden"
-        }`}
+        className={`flex-col gap-3 py-6 pl-6 pr-5.5 ${toggleDropdown ? "flex" : "hidden"
+          }`}
       >
         {categories.map((category) => (
-          <CategoryItem key={category.id} category={category} />
+          <CategoryItem key={category.id} category={category} isSelected={category.slug === category_slug} />
         ))}
       </div>
     </div>

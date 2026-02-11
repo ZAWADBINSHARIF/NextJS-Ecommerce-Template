@@ -1,7 +1,35 @@
 import api from "@/lib/axios";
+import { SortedOption, SortedOptionArray } from "@/types/Sorted";
 
-export const fetchAllAvailableProducts = async () => {
-    const products = await api.get('/products');
+export const fetchAllAvailableProducts = async ({
+    category_slug,
+    page,
+    perPage,
+    sortedBy
+}: {
+    category_slug?: string;
+    page: number;
+    perPage: number;
+    sortedBy: SortedOption;
+}) => {
+
+    const paginationParams = {
+        page,
+        perPage
+    };
+
+    const products = await api.get('/store-products', {
+        params: category_slug ?
+            {
+                category_slug,
+                ...paginationParams,
+                sortBy: sortedBy.value
+            } :
+            {
+                ...paginationParams,
+                sortBy: sortedBy.value
+            },
+    });
 
     return products;
 };

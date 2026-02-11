@@ -1,6 +1,16 @@
+import { SortedOptionArray } from "@/types/Sorted";
 import React, { useState, useEffect, useRef } from "react";
 
-const CustomSelect = ({ options }) => {
+
+interface Props {
+  options: SortedOptionArray,
+  setSortedBy: React.Dispatch<React.SetStateAction<{
+    label: string;
+    value: string;
+  }>>;
+}
+
+const CustomSelect = ({ options, setSortedBy }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const selectRef = useRef(null);
@@ -28,6 +38,7 @@ const CustomSelect = ({ options }) => {
 
   const handleOptionClick = (option) => {
     setSelectedOption(option);
+    setSortedBy(option);
     toggleDropdown();
   };
 
@@ -37,21 +48,19 @@ const CustomSelect = ({ options }) => {
       ref={selectRef}
     >
       <div
-        className={`select-selected whitespace-nowrap ${
-          isOpen ? "select-arrow-active" : ""
-        }`}
+        className={`select-selected whitespace-nowrap ${isOpen ? "select-arrow-active" : ""
+          }`}
         onClick={toggleDropdown}
       >
         {selectedOption.label}
       </div>
       <div className={`select-items ${isOpen ? "" : "select-hide"}`}>
-        {options.slice(1).map((option, index) => (
+        {options.map((option, index) => (
           <div
             key={index}
             onClick={() => handleOptionClick(option)}
-            className={`select-item ${
-              selectedOption === option ? "same-as-selected" : ""
-            }`}
+            className={`select-item ${selectedOption === option ? "same-as-selected" : ""
+              }`}
           >
             {option.label}
           </div>

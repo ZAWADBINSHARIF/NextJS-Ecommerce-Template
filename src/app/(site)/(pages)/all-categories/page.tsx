@@ -7,6 +7,7 @@ import QueryKeys from '@/constant/QueryKeys';
 import { fetchAllCategories } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 import { STORAGE_URL } from '@/constant';
+import Link from 'next/link';
 
 const AllCategories = () => {
 
@@ -20,7 +21,7 @@ const AllCategories = () => {
     }
 
     const SingleItem = ({ item }: { item: Category; }) => (
-        <a href="#" className="group flex flex-col items-center transition-transform hover:scale-105">
+        <Link href={'/shop-product?category=' + item.slug} className="group flex flex-col items-center transition-transform hover:scale-105">
             <div className="max-w-[130px] w-full h-32.5 rounded-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                 <Image
                     src={STORAGE_URL + item.image}
@@ -36,7 +37,7 @@ const AllCategories = () => {
                     {item.name}
                 </h3>
             </div>
-        </a>
+        </Link>
     );
 
     return (

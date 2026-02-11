@@ -3,25 +3,30 @@ import React, { useState, useEffect } from "react";
 import Breadcrumb from "../Common/Breadcrumb";
 import CustomSelect from "./CustomSelect";
 import CategoryDropdown from "./CategoryDropdown";
-import GenderDropdown from "./GenderDropdown";
-import SizeDropdown from "./SizeDropdown";
-import ColorsDropdwon from "./ColorsDropdwon";
-import PriceDropdown from "./PriceDropdown";
-import shopData from "../Shop/shopData";
 import SingleGridItem from "../Shop/SingleGridItem";
 import SingleListItem from "../Shop/SingleListItem";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllAvailableProducts, fetchAllCategories } from "@/api";
 import QueryKeys from "@/constant/QueryKeys";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { SORTED_OPTION, SortedOption } from "@/types/Sorted";
 
 const ShopWithSidebar = () => {
   const [productStyle, setProductStyle] = useState("grid");
   const [productSidebar, setProductSidebar] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(20);
+
+  const [sortedBy, setSortedBy] = useState<SortedOption>(SORTED_OPTION[0]);
+
+  const searchParams = useSearchParams();
+  const category_slug: string | null = searchParams.get('category');
 
   const allProductsQuery = useQuery({
-    'queryKey': [QueryKeys.STORE_PRODUCTS],
-    'queryFn': fetchAllAvailableProducts,
+    'queryKey': [QueryKeys.STORE_PRODUCTS, category_slug, currentPage, sortedBy],
+    'queryFn': () => fetchAllAvailableProducts({ category_slug, page: currentPage, perPage: productsPerPage, sortedBy }),
   });
 
   const allCategoryQuery = useQuery({
@@ -29,9 +34,8 @@ const ShopWithSidebar = () => {
     'queryFn': fetchAllCategories,
   });
 
-  // Handle error manually
-  if (allProductsQuery.data) {
-    console.log('Error:', allProductsQuery.data?.data.products.data);
+  if (allProductsQuery.data?.data?.products) {
+    console.log(allProductsQuery.data.data.products);
   }
 
   const handleStickyMenu = () => {
@@ -42,12 +46,10 @@ const ShopWithSidebar = () => {
     }
   };
 
-  const options = [
-    { label: "Latest Products", value: "0" },
-    { label: "High to Low", value: "1" },
-    { label: "Low to High", value: "2" },
-  ];
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [category_slug, sortedBy]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
@@ -121,7 +123,7 @@ const ShopWithSidebar = () => {
                   <div className="bg-white shadow-1 rounded-lg py-4 px-5">
                     <div className="flex items-center justify-between">
                       <p>Filters:</p>
-                      <button className="text-blue">Clean All</button>
+                      <Link href='/shop-product' className="text-blue">Clean All</Link>
                     </div>
                   </div>
 
@@ -153,7 +155,7 @@ const ShopWithSidebar = () => {
                 <div className="flex items-center justify-between">
                   {/* <!-- top bar left --> */}
                   <div className="flex flex-wrap items-center gap-4">
-                    <CustomSelect options={options} />
+                    <CustomSelect options={SORTED_OPTION} setSortedBy={setSortedBy} />
                   </div>
 
                   {/* <!-- top bar right --> */}
@@ -256,16 +258,17 @@ const ShopWithSidebar = () => {
               {/* <!-- Products Grid Tab Content End --> */}
 
               {/* <!-- Products Pagination Start --> */}
-              {/* <div className="flex justify-center mt-15">
+              <div className="flex justify-center mt-15">
                 <div className="bg-white shadow-1 rounded-md p-2">
                   <ul className="flex items-center">
+                    {/* Previous Button */}
                     <li>
                       <button
-                        id="paginationLeft"
-                        aria-label="button for pagination left"
                         type="button"
-                        disabled
-                        className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px disabled:text-gray-4"
+                        aria-label="button for pagination left"
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                        disabled={!allProductsQuery.data?.data?.products.prev_page_url}
+                        className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px] disabled:text-gray-400 hover:text-white hover:bg-blue"
                       >
                         <svg
                           className="fill-current"
@@ -283,75 +286,62 @@ const ShopWithSidebar = () => {
                       </button>
                     </li>
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] bg-blue text-white hover:text-white hover:bg-blue"
-                      >
-                        1
-                      </a>
-                    </li>
+                    {/* Dynamic Page Numbers */}
+                    {(() => {
+                      const lastPage = allProductsQuery.data?.data?.products.last_page || 1;
+                      let startPage = Math.max(1, currentPage - 2);
+                      let endPage = Math.min(lastPage, currentPage + 2);
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        2
-                      </a>
-                    </li>
+                      // Adjust range if near beginning or end
+                      if (currentPage <= 3) endPage = Math.min(5, lastPage);
+                      if (currentPage >= lastPage - 2) startPage = Math.max(lastPage - 4, 1);
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        3
-                      </a>
-                    </li>
+                      const pages = [];
+                      for (let i = startPage; i <= endPage; i++) pages.push(i);
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        4
-                      </a>
-                    </li>
+                      return (
+                        <>
+                          {pages.map((page) => (
+                            <li key={page}>
+                              <button
+                                onClick={() => setCurrentPage(page)}
+                                className={`flex py-1.5 px-3.5 duration-200 rounded-[3px] ${currentPage === page ? "bg-blue text-white" : "hover:text-white hover:bg-blue"
+                                  }`}
+                              >
+                                {page}
+                              </button>
+                            </li>
+                          ))}
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        5
-                      </a>
-                    </li>
+                          {/* Ellipsis and last page */}
+                          {endPage < lastPage && (
+                            <>
+                              <li>
+                                <span className="flex py-1.5 px-3.5">...</span>
+                              </li>
+                              <li>
+                                <button
+                                  onClick={() => setCurrentPage(lastPage)}
+                                  className={`flex py-1.5 px-3.5 duration-200 rounded-[3px] ${currentPage === lastPage ? "bg-blue text-white" : "hover:text-white hover:bg-blue"
+                                    }`}
+                                >
+                                  {lastPage}
+                                </button>
+                              </li>
+                            </>
+                          )}
+                        </>
+                      );
+                    })()}
 
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        ...
-                      </a>
-                    </li>
-
-                    <li>
-                      <a
-                        href="#"
-                        className="flex py-1.5 px-3.5 duration-200 rounded-[3px] hover:text-white hover:bg-blue"
-                      >
-                        10
-                      </a>
-                    </li>
-
+                    {/* Next Button */}
                     <li>
                       <button
-                        id="paginationLeft"
-                        aria-label="button for pagination left"
                         type="button"
-                        className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px] hover:text-white hover:bg-blue disabled:text-gray-4"
+                        aria-label="button for pagination right"
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                        disabled={!allProductsQuery.data?.data?.products.next_page_url}
+                        className="flex items-center justify-center w-8 h-9 ease-out duration-200 rounded-[3px] disabled:text-gray-400 hover:text-white hover:bg-blue"
                       >
                         <svg
                           className="fill-current"
@@ -370,7 +360,9 @@ const ShopWithSidebar = () => {
                     </li>
                   </ul>
                 </div>
-              </div> */}
+              </div>
+
+
               {/* <!-- Products Pagination End --> */}
             </div>
             {/* // <!-- Content End --> */}

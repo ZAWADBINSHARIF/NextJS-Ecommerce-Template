@@ -1,5 +1,7 @@
 export type Category = {
-  name: string;
   id: number;
+  name: string;
+  slug: string;
   image?: string;
+  available_store_products_count?: number
 };
