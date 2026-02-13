@@ -7,7 +7,8 @@ const CustomSelect = ({ options }: { options: Category[]; }) => {
   const FirstCategoryOption = {
     id: 0,
     name: 'All Categories',
-    image: null
+    image: null,
+    slug: 'all_categories'
   };
 
   const [selectedOption, setSelectedOption] = useState<Category>(FirstCategoryOption);
