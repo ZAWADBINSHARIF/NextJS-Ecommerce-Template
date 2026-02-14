@@ -160,6 +160,8 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                   />
 
                   {!product.is_out_of_stock &&
+                    product.stripe_payment_link &&
+
                     <div className="mt-7.5">
 
                       <a
