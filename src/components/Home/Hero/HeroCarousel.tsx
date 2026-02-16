@@ -45,6 +45,18 @@ const HeroCarousal = () => {
                   {item.title}
                 </h1>
 
+                <div className="flex lg:col-span-5 relative lg:hidden py-5 items-center justify-center bg-gray-50">
+                  <Image
+                    src={STORAGE_URL + item.image}
+                    alt={item.title}
+                    width={520}
+                    height={520}
+                    priority
+                    className="object-contain"
+                    unoptimized
+                  />
+                </div>
+
                 {item.sub_title && (
                   <p className="mt-6 text-lg text-gray-600 max-w-xl">
                     {item.sub_title}
@@ -65,7 +77,7 @@ const HeroCarousal = () => {
               </div>
 
               {/* RIGHT — IMAGE */}
-              <div className="lg:col-span-5 relative flex items-center justify-center bg-gray-50">
+              <div className="hidden lg:col-span-5 relative lg:flex items-center justify-center bg-gray-50">
                 <Image
                   src={STORAGE_URL + item.image}
                   alt={item.title}

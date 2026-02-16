@@ -45,7 +45,7 @@ const ProductItem = ({ item }: { item: Product; }) => {
 
       <span className="flex items-center gap-2 font-medium text-lg">
         <span className="text-dark">${formatCurrency(item.price)}</span>
-        {item.discount_percentage > 0 && <span className="text-dark-4 line-through">${formatCurrency(item.price + item.price * item.discount_percentage / 100)}</span>}
+        {item.discount_percentage > 0 && <span className="text-dark-4 line-through">${formatCurrency(+item.price + +item.price * +item.discount_percentage / 100)}</span>}
       </span>
 
 

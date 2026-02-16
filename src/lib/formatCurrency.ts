@@ -13,7 +13,7 @@ export function formatCurrency(
         maximumFractionDigits: 2,
         useGrouping: options?.useGrouping ?? true,
     }).format(number);
-
+    console.log(formatted);
     return options?.currencySymbol
         ? `${options.currencySymbol}${formatted}`
         : formatted;
