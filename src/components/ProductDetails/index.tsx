@@ -99,7 +99,9 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                     }
                   </div>
 
-                  {product.is_out_of_stock ?
+                  {product.is_out_of_stock ||
+                    product.platform_product?.is_out_of_stock ||
+                    !product.platform_product?.published ?
                     <div className="flex flex-wrap items-center gap-5.5 mb-4.5">
 
                       <div className="flex items-center gap-1.5">
@@ -159,7 +161,9 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                     }}
                   />
 
-                  {!product.is_out_of_stock &&
+                  {(!product.is_out_of_stock ||
+                    !product.platform_product?.is_out_of_stock ||
+                    product.platform_product?.published) &&
                     product.stripe_payment_link &&
 
                     <div className="mt-7.5">
