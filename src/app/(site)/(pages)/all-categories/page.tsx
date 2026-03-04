@@ -8,6 +8,7 @@ import { fetchAllCategories } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 import { STORAGE_URL } from '@/constant';
 import Link from 'next/link';
+import Breadcrumb from '@/components/Common/Breadcrumb';
 
 const AllCategories = () => {
 
@@ -41,7 +42,12 @@ const AllCategories = () => {
     );
 
     return (
-        <section className="overflow-hidden pb-10 lg:pb-12.5 xl:pb-15 pt-57.5 sm:pt-45 lg:pt-30 xl:pt-51.5">
+        <>
+            <Breadcrumb
+                title={"Explore All Categoris"}
+                pages={["All Categories"]}
+            />
+
             <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 justify-items-center">
                     {allCategoryQuery.data?.data?.categories && allCategoryQuery.data?.data?.categories.map((item) => (
@@ -49,7 +55,7 @@ const AllCategories = () => {
                     ))}
                 </div>
             </div>
-        </section>
+        </>
     );
 };
 

@@ -89,7 +89,7 @@ const ShopWithSidebar = () => {
               <button
                 onClick={() => setProductSidebar(!productSidebar)}
                 aria-label="button for product sidebar toggle"
-                className={`xl:hidden absolute -right-12.5 sm:-right-8 flex items-center justify-center w-8 h-8 rounded-md bg-white shadow-1 ${stickyMenu
+                className={`xl:hidden flex items-center justify-center w-8 h-8 rounded-md bg-white shadow-1 ${stickyMenu
                   ? "lg:top-20 sm:top-34.5 top-35"
                   : "lg:top-24 sm:top-39 top-37"
                   }`}
