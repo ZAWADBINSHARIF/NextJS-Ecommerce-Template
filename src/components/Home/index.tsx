@@ -2,11 +2,13 @@ import React from "react";
 import Hero from "./Hero";
 import Categories from "./Categories";
 import NewArrival from "./NewArrivals";
+import HeroBanner from "./HeroBanner";
 
 const Home = () => {
   return (
     <main>
-      <Hero />
+      {/* <Hero /> */}
+      <HeroBanner/>
       <Categories />
       <NewArrival />
       {/* <PromoBanner /> */}

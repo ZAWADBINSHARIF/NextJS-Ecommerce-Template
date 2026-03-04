@@ -32,8 +32,8 @@ const ProductItem = ({ item }: { item: Product; }) => {
           router.push(routePath);
           handleProductDetails();
         }}
-        className="relative overflow-hidden flex items-center justify-center rounded-lg bg-[#F6F7FB] min-h-[270px] mb-4">
-        <Image src={STORAGE_URL + item.images[0]} alt="" width={250} height={250} unoptimized />
+        className="relative shadow-md overflow-hidden flex items-center justify-center rounded-lg bg-[#F6F7FB] min-h-[270px] mb-4">
+        <Image className="w-full h-full bg-cover" src={STORAGE_URL + item.images[0]} alt="" width={250} height={250} unoptimized />
       </div>
 
       <h3

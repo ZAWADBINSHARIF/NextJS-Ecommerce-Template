@@ -25,7 +25,7 @@ const NewArrival = () => {
         {/* <!-- section title --> */}
         <div className="mb-7 flex items-center justify-between">
           <div>
-            <span className="flex items-center gap-2.5 font-medium text-dark mb-1.5">
+            <span className="flex items-center text-xl font-semibold gap-2.5 text-dark mb-1.5">
               <svg
                 width="20"
                 height="20"
@@ -45,11 +45,8 @@ const NewArrival = () => {
                   strokeLinecap="round"
                 />
               </svg>
-              These are new product
-            </span>
-            <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
               New Arrivals
-            </h2>
+            </span>
           </div>
 
           <Link

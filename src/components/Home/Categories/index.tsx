@@ -46,7 +46,7 @@ const Categories = () => {
           {/* <!-- section title --> */}
           <div className="mb-10 flex items-center justify-between">
             <div>
-              <span className="flex items-center gap-2.5 font-medium text-dark mb-1.5">
+              <span className="flex items-center text-xl gap-2.5 font-semibold text-dark mb-1.5">
                 <svg
                   width="20"
                   height="20"
@@ -83,9 +83,6 @@ const Categories = () => {
                 </svg>
                 Categories
               </span>
-              <h2 className="font-semibold text-xl xl:text-heading-5 text-dark">
-                Browse by Category
-              </h2>
             </div>
 
             <div className="flex items-center gap-3">

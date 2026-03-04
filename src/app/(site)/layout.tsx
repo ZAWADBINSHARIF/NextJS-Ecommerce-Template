@@ -21,6 +21,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
+import Navbar from "@/components/Navbar";
 
 export default function RootLayout({
   children,
@@ -48,7 +49,10 @@ export default function RootLayout({
                   <PreviewSliderProvider>
                     <QueryClientProvider client={queryClient}>
 
-                      <Header />
+                      {/* <Header /> */}
+
+                      <Navbar />
+
                       {children}
 
 

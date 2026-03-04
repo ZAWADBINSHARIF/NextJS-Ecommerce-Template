@@ -113,7 +113,61 @@ const Footer = () => {
                 </li>}
             </ul>
 
-            {/* <!-- Social Links start --> */}
+          </div>
+
+          {/* <!-- Menu Section --> */}
+          <div className="w-full">
+            <h2 className="mb-7.5 text-xl font-semibold text-gray-900">
+              Menu
+            </h2>
+
+            <ul className="flex flex-col gap-3">
+              <li>
+                <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="/">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="/shop-product">
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="/all-categories">
+                  All Categories
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* <!-- Quick Link Section 1 --> */}
+          <div className="w-full">
+            <h2 className="mb-7.5 text-xl font-semibold text-gray-900">
+              Quick Link
+            </h2>
+
+            {quickLinksQuery.data?.data?.links &&
+              <ul className="grid grid-flow-col grid-rows-5 gap-x-15 gap-y-2">
+                {quickLinksQuery.data?.data?.links?.map((item, key) => (
+                  <li key={item.id}>
+                    <Link href={'/quick-link/' + item.url_slug}>
+                      <p className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" >
+                        {item.title}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            }
+          </div>
+
+          {/* <!-- Social Links start --> */}
+          <div className="w-full">
+
+            <h2 className="mb-7.5 text-xl font-semibold text-gray-900">
+              Social Media
+            </h2>
+
             <div className="flex items-center gap-3 mt-7.5">
               {contactsQuery.data?.data?.contacts?.facebook &&
                 <a
@@ -197,89 +251,8 @@ const Footer = () => {
                   <IoLogoYoutube size={20} />
                 </a>}
             </div>
-            {/* <!-- Social Links end --> */}
           </div>
-
-          {/* <!-- Menu Section --> */}
-          <div className="w-full">
-            <h2 className="mb-7.5 text-xl font-semibold text-gray-900">
-              Menu
-            </h2>
-
-            <ul className="flex flex-col gap-3">
-              <li>
-                <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="/">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="/shop-product">
-                  Shop
-                </Link>
-              </li>
-              <li>
-                <Link className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="/all-categories">
-                  All Categories
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* <!-- Quick Link Section 1 --> */}
-          <div className="w-full">
-            <h2 className="mb-7.5 text-xl font-semibold text-gray-900">
-              Quick Link
-            </h2>
-
-            {quickLinksQuery.data?.data?.links &&
-              <ul className="grid grid-flow-col grid-rows-5 gap-x-15 gap-y-2">
-                {quickLinksQuery.data?.data?.links?.map((item, key) => (
-                  <li key={item.id}>
-                    <Link href={'/quick-link/' + item.url_slug}>
-                      <p className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" >
-                        {item.title}
-                      </p>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            }
-          </div>
-
-          {/* <!-- Quick Link Section 2 --> */}
-          {/* <div className="w-full">
-            <h2 className="mb-7.5 text-xl font-semibold text-gray-900">
-              Services
-            </h2>
-
-            <ul className="flex flex-col gap-3">
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Free Shipping
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Easy Returns
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  24/7 Support
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Secure Payment
-                </a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm" href="#">
-                  Order Tracking
-                </a>
-              </li>
-            </ul>
-          </div> */}
+          {/* <!-- Social Links end --> */}
 
         </div>
         {/* <!-- footer menu end --> */}
@@ -288,20 +261,12 @@ const Footer = () => {
       {/* <!-- footer bottom start --> */}
       <div className="border-t border-gray-300">
         <div className="max-w-[1170px] mx-auto px-4 sm:px-8 xl:px-0">
-          <div className="flex flex-col md:flex-row justify-between items-center py-6">
-            <p className="text-gray-600 text-sm mb-4 md:mb-0">
-              &copy; {year}. All rights reserved by PimjoLabs.
-            </p>
+          <div className="flex flex-col md:flex-row justify-center items-center py-6">
 
             <div className="flex items-center gap-6">
               <span className="text-gray-600 text-sm">We Accept: External Stripe Payment Getway</span>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-5 bg-gray-400 rounded"></div>
-                <div className="w-8 h-5 bg-gray-400 rounded"></div>
-                <div className="w-8 h-5 bg-gray-400 rounded"></div>
-                <div className="w-8 h-5 bg-gray-400 rounded"></div>
-              </div>
             </div>
+            
           </div>
         </div>
       </div>;

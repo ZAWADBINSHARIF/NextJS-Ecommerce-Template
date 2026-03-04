@@ -7,8 +7,8 @@ import Link from "next/link";
 const SingleItem = ({ item }: { item: Category; }) => {
   return (
     <Link href={'/shop-product?category=' + item.slug} className="group flex flex-col items-center">
-      <div className="max-w-[130px] w-full bg-[#F2F3F8] h-32.5 rounded-full flex items-center justify-center mb-4">
-        <Image src={STORAGE_URL + item.image} alt="Category" width={82} height={62} unoptimized />
+      <div className="max-w-[130px] w-full overflow-hidden bg-[#F2F3F8] h-32.5 rounded-full flex items-center justify-center mb-4">
+        <Image className="w-full h-full bg-cover" src={STORAGE_URL + item.image} alt="Category" width={82} height={62} unoptimized />
       </div>
 
       <div className="flex justify-center">
