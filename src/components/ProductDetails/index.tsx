@@ -94,14 +94,15 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
             <div className="max-w-[1170px] w-full mx-auto px-4 sm:px-8 xl:px-0">
               <div className="flex flex-col lg:flex-row gap-7.5 xl:gap-17.5">
                 <div className="lg:max-w-[570px] w-full">
-                  <div className="lg:min-h-[512px] rounded-lg shadow-1 bg-gray-2 p-4 sm:p-7.5 relative flex items-center justify-center">
+                  <div className="lg:min-h-[512px] rounded-lg p-4 sm:p-7.5 relative flex items-center justify-center">
                     <div>
                       {product.images && (
                         <Image
                           src={STORAGE_URL + product.images[previewImg]}
                           alt="products-details"
-                          width={400}
-                          height={400}
+                          className="rounded-md shadow-3 bg-cover"
+                          width={480}
+                          height={480}
                           unoptimized
                         />
                       )}
@@ -120,8 +121,8 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                             }`}
                         >
                           <Image
-                            width={50}
-                            height={50}
+                            width={100}
+                            height={100}
                             src={STORAGE_URL + item}
                             alt="thumbnail"
                             unoptimized
