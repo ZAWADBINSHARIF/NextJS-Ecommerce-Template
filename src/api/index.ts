@@ -91,3 +91,15 @@ export const fetchBanners = async () => {
 
     return data;
 };
+
+export const productCheckout = async (orderData) => {
+    try {
+        const { data } = await api.post('/payment/checkout', { ...orderData });
+
+        return data;
+
+    } catch (error) {
+        console.log(error);
+    }
+
+};

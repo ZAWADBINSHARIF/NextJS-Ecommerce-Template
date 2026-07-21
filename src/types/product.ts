@@ -10,7 +10,6 @@ export interface Product {
   discount_percentage?: number; // optional if not always set
   is_out_of_stock: boolean;
   published: boolean;
-  stripe_payment_link?: string; // optional if not always set
   platform_product: {
     id: number,
     is_out_of_stock: boolean,

@@ -1,22 +1,38 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../Common/Breadcrumb";
 import Image from "next/image";
 import { usePreviewSlider } from "@/app/context/PreviewSliderContext";
 import { Product } from "@/types/product";
 import { useQuery } from "@tanstack/react-query";
 import QueryKeys from "@/constant/QueryKeys";
-import { fetchProductDetails } from "@/api";
+import { fetchProductDetails, productCheckout } from "@/api";
 import { STORAGE_URL } from "@/constant";
 import { formatCurrency } from "@/lib/formatCurrency";
 import DOMPurify from "isomorphic-dompurify";
 import { RxCrossCircled } from "react-icons/rx";
-
-
+import * as countryCodes from "country-codes-list";
+import { useRouter } from "next/navigation";;
 
 const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) => {
-  const [previewImg, setPreviewImg] = useState(0);
 
+  const router = useRouter();
+
+  const [previewImg, setPreviewImg] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const countries = countryCodes.all();
+
+  // Form states
+  const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [countryCode, setCountryCode] = useState("+1");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [deliveryCity, setDeliveryCity] = useState("");
+  const [deliveryState, setDeliveryState] = useState("");
+  const [deliveryZip, setDeliveryZip] = useState("");
 
   const productDetailsQuery = useQuery({
     queryKey: [QueryKeys.PRODUCT_DETAILS, short_id, slug],
@@ -27,12 +43,44 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
   let product: Product | null = null;
   if (productDetailsQuery?.data?.product) {
     product = productDetailsQuery?.data?.product;
-    console.log(product);
   }
 
   useEffect(() => {
     localStorage.setItem("productDetails", JSON.stringify(product));
   }, [product]);
+
+  const handlePaymentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const orderData = {
+      products: [{
+        'slug': product.slug,
+        'short_id': product.short_id,
+        quantity
+      }],
+      total_amount: Number(product?.price) * quantity,
+      customer_name: customerName,
+      customer_email: customerEmail,
+      customer_phone: `${countryCode}${customerPhone}`,
+      delivery: {
+        address: deliveryAddress,
+        city: deliveryCity,
+        state: deliveryState,
+        zip: deliveryZip,
+      }
+    };
+    console.log("Processing Order Data:", orderData);
+
+    const { checkout_url } = await productCheckout(orderData);
+
+    if (checkout_url) {
+      console.log(checkout_url);
+
+      router.push(checkout_url);
+    }
+
+
+    // Add payment action logic here
+  };
 
   return (
     <>
@@ -48,7 +96,6 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                 <div className="lg:max-w-[570px] w-full">
                   <div className="lg:min-h-[512px] rounded-lg shadow-1 bg-gray-2 p-4 sm:p-7.5 relative flex items-center justify-center">
                     <div>
-
                       {product.images && (
                         <Image
                           src={STORAGE_URL + product.images[previewImg]}
@@ -61,7 +108,6 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                     </div>
                   </div>
 
-                  {/* ?  &apos;border-blue &apos; :  &apos;border-transparent&apos; */}
                   {product?.images?.length > 0 &&
                     <div className="flex flex-wrap sm:flex-nowrap gap-4.5 mt-6">
                       {product.images.map((item, key) => (
@@ -103,16 +149,13 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                     product.platform_product?.is_out_of_stock ||
                     !product.platform_product?.published ?
                     <div className="flex flex-wrap items-center gap-5.5 mb-4.5">
-
                       <div className="flex items-center gap-1.5">
                         <RxCrossCircled size={20} color="red" />
-
                         <span className="text-red"> Out Of Stock </span>
                       </div>
                     </div> :
 
                     <div className="flex flex-wrap items-center gap-5.5 mb-4.5">
-
                       <div className="flex items-center gap-1.5">
                         <svg
                           width="20"
@@ -137,7 +180,6 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                             </clipPath>
                           </defs>
                         </svg>
-
                         <span className="text-green"> In Stock </span>
                       </div>
                     </div>
@@ -145,11 +187,11 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
 
                   <h3 className="font-medium text-custom-1 mb-4.5 space-x-2">
                     <span className="text-sm sm:text-base text-dark">
-                      Price: ${formatCurrency(product.price)}
+                      Price: ${formatCurrency(+product.price * quantity)}
                     </span>
                     {product.discount_percentage > 0 &&
                       <span className="line-through">
-                        ${formatCurrency(+product?.price + (+product?.price * product?.discount_percentage / 100))}
+                        ${formatCurrency((+product?.price + (+product?.price * product?.discount_percentage / 100)) * quantity)}
                       </span>
                     }
                   </h3>
@@ -164,24 +206,39 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                   {(!product.is_out_of_stock ||
                     !product.platform_product?.is_out_of_stock ||
                     product.platform_product?.published) &&
-                    product.stripe_payment_link &&
+                    <div className="mt-7.5 flex items-center gap-4">
+                      {/* Quantity Selector Button */}
+                      <div className="inline-flex items-center border border-gray-3 rounded-md bg-white overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                          className="px-4 py-2 hover:bg-gray-2 text-dark font-medium transition duration-200"
+                        >
+                          -
+                        </button>
+                        <span className="px-4 py-2 text-dark font-semibold border-x border-gray-3 min-w-12 text-center">
+                          {quantity}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setQuantity(prev => prev + 1)}
+                          className="px-4 py-2 hover:bg-gray-2 text-dark font-medium transition duration-200"
+                        >
+                          +
+                        </button>
+                      </div>
 
-                    <div className="mt-7.5">
-
-                      <a
-                        href={product.stripe_payment_link}
+                      <button
+                        onClick={() => setIsModalOpen(true)}
                         className="inline-flex font-medium text-white bg-blue py-3 px-7 rounded-md ease-out duration-200 hover:bg-blue-dark"
                       >
-                        Purchase Now
-                      </a>
-
+                        Order Now
+                      </button>
                     </div>
                   }
                 </div>
-
               </div>
             </div>
-
           </section>
 
           <section className="overflow-hidden bg-gray-2 py-20">
@@ -199,18 +256,148 @@ const ShopDetails = ({ short_id, slug }: { short_id: string, slug: string; }) =>
                 <div
                   className={`flex-col sm:flex-row gap-7.5 xl:gap-12.5 mt-12.5 flex`}
                 >
-
                   <div
                     className="prose"
                     dangerouslySetInnerHTML={{
                       __html: DOMPurify.sanitize(product.description),
                     }}
                   />
-
                 </div>
               </div>
             </div>
           </section>
+
+          {/* Checkout Form Modal */}
+          {isModalOpen && (
+            <div className="fixed inset-0 z-99999 flex items-center justify-center bg-black/50 p-4">
+              {/* Added shadow-2xl for deeper modal shadow */}
+              <div className="relative w-full max-w-[550px] rounded-lg bg-white p-6 sm:p-8 shadow-2xl xl:p-10 max-h-[90vh] overflow-y-auto">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute right-4 top-4 text-dark hover:text-blue transition duration-200"
+                >
+                  <RxCrossCircled size={24} />
+                </button>
+
+                <h3 className="font-semibold text-xl text-dark mb-6">Customer & Delivery Information</h3>
+
+                <form onSubmit={handlePaymentSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-dark mb-1">
+                      Customer Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      className="w-full rounded border border-gray-3 bg-transparent px-4 py-2 text-dark outline-none focus:border-blue shadow-sm"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-dark mb-1">
+                      Customer Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={customerEmail}
+                      onChange={(e) => setCustomerEmail(e.target.value)}
+                      className="w-full rounded border border-gray-3 bg-transparent px-4 py-2 text-dark outline-none focus:border-blue shadow-sm"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-dark mb-1">
+                      Phone Number <span className="text-red-500">*</span>
+                    </label>
+                    <div className="flex flex-col gap-2 shadow-sm">
+                      <select
+                        value={countryCode}
+                        onChange={(e) => setCountryCode(e.target.value)}
+                        className="rounded border border-gray-3 bg-white px-2 py-2 text-dark outline-none focus:border-blue"
+                      >
+                        {countries.map((country: countryCodes.CountryData) => (
+                          <option
+                            key={country.countryCode}
+                            value={`+${country.countryCallingCode}`}
+                          >
+                            (+{country.countryCallingCode})
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="tel"
+                        required
+                        value={customerPhone}
+                        onChange={(e) => setCustomerPhone(e.target.value)}
+                        className="w-full rounded border border-gray-3 bg-transparent px-4 py-2 text-dark outline-none focus:border-blue"
+                        placeholder="Phone number"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="border-t border-gray-3 pt-4">
+                    <span className="block font-medium text-sm text-dark mb-2">
+                      USA Delivery Information <span className="text-red-500">*</span>
+                    </span>
+
+                    <div className="space-y-3">
+                      <div>
+                        <input
+                          type="text"
+                          required
+                          value={deliveryAddress}
+                          onChange={(e) => setDeliveryAddress(e.target.value)}
+                          className="w-full rounded border border-gray-3 bg-transparent px-4 py-2 text-dark outline-none focus:border-blue shadow-sm"
+                          placeholder="Street Address"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2">
+                        <input
+                          type="text"
+                          required
+                          value={deliveryCity}
+                          onChange={(e) => setDeliveryCity(e.target.value)}
+                          className="w-full rounded border border-gray-3 bg-transparent px-4 py-2 text-dark outline-none focus:border-blue shadow-sm"
+                          placeholder="City"
+                        />
+                        <input
+                          type="text"
+                          required
+                          value={deliveryState}
+                          onChange={(e) => setDeliveryState(e.target.value)}
+                          className="w-full rounded border border-gray-3 bg-transparent px-4 py-2 text-dark outline-none focus:border-blue shadow-sm"
+                          placeholder="State"
+                        />
+                        <input
+                          type="text"
+                          required
+                          value={deliveryZip}
+                          onChange={(e) => setDeliveryZip(e.target.value)}
+                          className="w-full rounded border border-gray-3 bg-transparent px-4 py-2 text-dark outline-none focus:border-blue shadow-sm"
+                          placeholder="ZIP Code"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4">
+                    <button
+                      type="submit"
+                      className="w-full inline-flex justify-center font-medium text-white bg-blue py-3 px-7 rounded-md ease-out duration-200 hover:bg-blue-dark shadow-md"
+                    >
+                      Pay ${formatCurrency(+product.price * quantity)}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </>
       )}
     </>
