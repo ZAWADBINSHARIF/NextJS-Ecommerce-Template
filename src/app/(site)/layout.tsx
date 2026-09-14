@@ -22,6 +22,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import Navbar from "@/components/Navbar";
+import FabButton from "@/components/FabButton";
 
 export default function RootLayout({
   children,
@@ -58,6 +59,8 @@ export default function RootLayout({
 
                       {/* <CartSidebarModal />
                     <PreviewSliderModal /> */}
+
+                      <FabButton phoneNumber="+8801641940406" />
 
                       <Footer />
 
